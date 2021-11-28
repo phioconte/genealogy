@@ -1,3 +1,3 @@
 {
-    "files": ["opendatabase.py","genealogy_V1.ui","main.py","dbmanagment.py","messages.py","util.py","config.ui","config.py","display.py"]
+    "files": ["main.py","dbmanagment.py","genealogy_V1.ui","util.py","config.ui","messages.py","opendatabase.py","display.py","config.py","reference.py","gedcomreadwrite.py"]
 }

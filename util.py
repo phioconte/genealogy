@@ -1,13 +1,15 @@
 """ Definition of utilities
  Author                        : Ph OCONTE
  Date                          : november 26, 2021
- Date of last update           : november 26, 2021
+ Date of last update           : november 28, 2021
  Version                       : 1.0.0
 """
 import os
 from PyQt5.QtWidgets import (QFileDialog, QMessageBox, QDialogButtonBox)
 
 from dbmanagment import SelectTabDb, CountTabDb
+from reference import dateap_gb
+
 
 def ReadFile(fen, mes1, mes2, type, mes3, dir):
     """
@@ -47,7 +49,6 @@ def WriteFile(fen, mes1, mes2, type, mes3, dir):
     file = ""
     file = QFileDialog.getSaveFileName(fen, mes2, dir, type)
     if not file[0]:
-        showDialog(mes2, mes3)
         return ''
 
     file_name = os.path.basename(file[0])
@@ -109,3 +110,68 @@ def SelList(list, case, flag):
         i += 1
 
     return
+
+
+def ReadEventSexe(fen, id, sexe, type, cursor):
+    """
+    Selecting an event based on gender
+    input:
+        fen     : pointer to window
+        sexe    : individual sexe
+        type    : type of event
+        cursor  : pointer to database
+    output:
+        data    : data of event
+    """
+    param = ('day', 'month', 'year', 'city', 'note', 'com1',
+             'source', 'time', 'precision', 'id')
+    if sexe == 'M':
+        cond1 = 'idh=? AND type=?'
+    else:
+        cond1 = 'idw=? AND type=?'
+    data = SelectTabDb(fen, cursor, 'event', param, cond1,
+                       (id, type), 1, 'null')
+    return data
+
+def utilTreeClear(fen):
+    """
+    Clear the tree
+    input:
+        fen     : pointer to window
+    output:
+        nothing
+    """
+    datas = ('PaternelGrandFather', 'PaternelGrandMother', 'MaternelGrandFather',
+             'MaternelGrandMother', 'Father', 'Mother', 'Individual',
+             'Spouse', 'Children', 'BrothersandSisters')
+    for data in datas:
+        getattr(fen, data).clear()
+    return
+
+def DateExplode(date, month_lg):
+    """ Transform date dd/mm/yyyy to dd/month/year
+    input:
+        date        : date to explode
+        month_lg    : month in the selected language
+    output:
+        date
+    """
+    data = [None, None, None, 0]
+    ldate = date.split(' ')
+    i = 0
+    if ldate[i] in dateap_gb:
+        data[3] = dateap_gb.index(ldate[i])
+        i += 1
+    if len(ldate) == i + 3:         # day, month, year
+        data[0] = ldate[i]
+        if ldate[i + 1] in month_lg:
+            data[1] = 1 + month_lg.index(ldate[i + 1])
+        data[2] = ldate[i + 2]
+    if len(ldate) == i + 2:         # month, year
+        if ldate[i] in month_lg:
+            data[1] = 1 + month_lg.index(ldate[i])
+        data[2] = ldate[i + 1]
+    if len(ldate) == i + 1:         # year
+        data[2] = ldate[i]
+
+    return(data)
