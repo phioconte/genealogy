@@ -1,16 +1,21 @@
 """ Genealogy management program
  Author                        : Ph OCONTE
- Date                          : November 24, 2021
- Date of last update           : November 28, 2021
+ Date                          : november 24, 2021
+ Date of last update           : december 1, 2021
  Version                       : 1.0.0
 """
 import sys
 from PyQt5 import QtWidgets, uic, QtGui
 
 from config import Config, ConfigMenu
-from opendatabase import OpenDatabase
+from opendatabase import OpenDatabase, RenameDb
 from display import DisplayIn, DisplayIndiv
 from gedcomreadwrite import GedcomRead, GedcomWrite
+from pdfwrite import PdfWrite
+from htmlwrite import HtmlWrite
+from eventmanagment import NewEvent, ModifyEvent, DeleteEvent
+from cities import ListCities
+from tools import ToolsDbtoTxt
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/genealogy_V1.ui"
 
@@ -36,7 +41,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         Tree management commands
         IndivList : Select individual
-        Indiv     : Define the links of the individual
+        Individual: Define the links of the individual
         Spouse    : the spouse selected becomes the main individual
         BrSi      : the brother or sister selected becomes the main individual
         Child     : the child selected becomes the main individual
@@ -48,7 +53,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Gmm       : The maternel grandmother becomes the main individual
         """
         self.IndivList.itemClicked.connect(self.ShowMenuIndivSelect)
-        # self.Indiv.itemClicked.connect(self.UIndiv)
+        self.Individual.itemClicked.connect(self.IndividualLink)
         self.Spouse.itemClicked.connect(self.SIndiv)
         self.BrothersandSisters.itemClicked.connect(self.BSIndiv)
         self.Children.itemClicked.connect(self.CIndiv)
@@ -62,22 +67,38 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         Management of CSV, GEDCOM, HTML and PDF files
         switch00   : Open an existing database
-        Rename     : Rename the database
+        switch14   : Rename the database
         switch01   : read csv families and cities files
-        CsvWrite   : write csv families and cities files
+        switch03   : write csv families and cities files
         switch02   : read GECOM file
         switch04   : write GEDCOM file
-        HtmlWrite  : write website
-        PdfWrite   : write pdf file
+        switch05   : write website
+        switch06   : write pdf file
         """
         self.switch00.triggered.connect(self.OpenDb)
-        # self.Rename.triggered.connect(self.RenameDb)
-        # self.CsvRead.triggered.connect(self.CsvR)
-        # self.CsvWrite.triggered.connect(self.CsvW)
+        self.switch14.triggered.connect(self.RenameDb)
+        self.switch01.triggered.connect(self.CsvR)
+        self.switch03.triggered.connect(self.CsvW)
         self.switch02.triggered.connect(self.GedR)
         self.switch04.triggered.connect(self.GedW)
-        # self.HtmlWrite.triggered.connect(self.HtmlW)
-        # self.PdfWrite.triggered.connect(self.PdfW)
+        self.switch05.triggered.connect(self.HtmlW)
+        self.switch06.triggered.connect(self.PdfW)
+
+        """
+        management of a new event
+        IndividualTable : Events table
+        """
+        self.IndividualTable.itemClicked.connect(self.ShowMenuEvent)
+
+        """
+        Tools
+        switch11   : Database to *.txt file
+        switch12   : Analyse database
+        switch13   : Private to public
+        switch15   : List of cities
+        """
+        self.switch11.triggered.connect(self.DbtoTxt)
+        self.switch15.triggered.connect(self.Cities)
 
     def MConfig(self):          # Configuration command
         ConfigMenu(fen)
@@ -85,16 +106,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     """=============================
     Tree management commands
-    ShowMenu1 : Select individual
-    Spouse    : the spouse selected becomes the main individual
-    BrSi      : the brother or sister selected becomes the main individual
-    Child     : the child selected becomes the main individual
-    Father    : the father becomes the main individual
-    Mother    : the mother becomes the main individual
-    Gpp       : The paternel grandfather becomes the main individual
-    Gmp       : The paternel grandmother becomes the main individual
-    Gmp       : The maternel grandfather becomes the main individual
-    Gmm       : The maternel grandmother becomes the main individual
+    ShowMenu1      : Select individual
+    IndividualLink : Define the links of the individual
+    Spouse         : the spouse selected becomes the main individual
+    BrSi           : the brother or sister selected becomes the main individual
+    Child          : the child selected becomes the main individual
+    Father         : the father becomes the main individual
+    Mother         : the mother becomes the main individual
+    Gpp            : The paternel grandfather becomes the main individual
+    Gmp            : The paternel grandmother becomes the main individual
+    Gmp            : The maternel grandfather becomes the main individual
+    Gmm            : The maternel grandmother becomes the main individual
     """
 
     def ShowMenuIndivSelect(self, pos):
@@ -107,6 +129,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def SelectIndiv(self):
         data = ' '.join(self.IndivList.currentItem().text().split())
         self.PrintIndiv(data)
+        return
+
+    def DeleteIndiv(self):
+        return
+
+    def IndividualLink(self):
         return
 
     def SIndiv(self):
@@ -132,9 +160,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def MIndiv(self):
         data = ' '.join(self.Mother.item(0).text().split())
         self.PrintIndiv(data)
-        return
-
-    def DeleteIndiv(self):
         return
 
     def GppIndiv(self):
@@ -172,8 +197,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     HtmlW      : write website
     PdfW       : write pdf file
     """
+
     def OpenDb(self):
         OpenDatabase(fen)
+        return
+
+    def RenameDb(self):
+        RenameDb(fen)
+        return
+
+    def CsvR(self):
+        return
+
+    def CsvW(self):
         return
 
     def GedR(self):
@@ -182,6 +218,56 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def GedW(self):
         GedcomWrite(fen)
+        return
+
+    def HtmlW(self):
+        HtmlWrite(fen)
+        return
+
+    def PdfW(self):
+        PdfWrite(fen)
+        return
+
+    """
+    management of a new event
+    ShowMenuEvent  : Events table
+    """
+
+    def ShowMenuEvent(self, pos):
+        menu2 = QtWidgets.QMenu(self)
+        menu2.setTitle("ACTE")
+        action21 = menu2.addAction(fen.mess["all15"], self.NewEvent)
+        action22 = menu2.addAction(fen.mess["all16"], self.ModifyEvent)
+        action23 = menu2.addAction(fen.mess["all14"], self.DeleteEvent)
+        action2 = menu2.exec_(QtGui.QCursor.pos())
+        return
+
+    def NewEvent(self):
+        NewEvent(fen)
+        return
+
+    def ModifyEvent(self):
+        ModifyEvent(fen)
+        return
+
+    def DeleteEvent(self):
+        DeleteEvent(fen)
+        return
+
+    """
+    Tools
+    DbtoTxt    : Database to *.txt file
+    switch12   : Analyse database
+    switch13   : Private to public
+    ListCities : List of cities
+    """
+
+    def DbtoTxt(self):
+        ToolsDbtoTxt(fen)
+        return
+
+    def Cities(self):
+        ListCities(fen)
         return
 
     def Message(self, mes):     # Show message to statusbar

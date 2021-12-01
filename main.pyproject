@@ -1,3 +1,3 @@
 {
-    "files": ["main.py","dbmanagment.py","genealogy_V1.ui","util.py","config.ui","messages.py","opendatabase.py","display.py","config.py","reference.py","gedcomreadwrite.py"]
+    "files": ["util.py","genealogy_V1.ui","htmlwrite.py","messages.py","config.py","opendatabase.py","eventmanagment.py","event.ui","gedcomreadwrite.py","style.css","pdfwrite.py","display.py","main.py","cities.py","reference.py","cities.ui","config.ui","dbmanagment.py","tools.py"]
 }

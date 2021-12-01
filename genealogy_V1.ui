@@ -64,8 +64,10 @@
      <addaction name="switch06"/>
     </widget>
     <addaction name="switch00"/>
+    <addaction name="switch14"/>
     <addaction name="separator"/>
     <addaction name="menu01"/>
+    <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="menu02"/>
     <addaction name="separator"/>
@@ -85,6 +87,7 @@
     <addaction name="switch11"/>
     <addaction name="switch12"/>
     <addaction name="switch13"/>
+    <addaction name="switch15"/>
    </widget>
    <widget class="QMenu" name="menu03">
     <property name="title">
@@ -168,6 +171,9 @@
         </property>
         <property name="styleSheet">
          <string notr="true">QLineEdit {background:yellow; color:blue}</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -504,12 +510,27 @@
        <pointsize>10</pointsize>
       </font>
      </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
      <property name="rowCount">
       <number>0</number>
      </property>
      <property name="columnCount">
       <number>8</number>
      </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
      <column>
       <property name="text">
        <string>Event</string>
@@ -685,6 +706,16 @@
   <action name="switch08">
    <property name="text">
     <string>Configuration</string>
+   </property>
+  </action>
+  <action name="switch14">
+   <property name="text">
+    <string>Rename</string>
+   </property>
+  </action>
+  <action name="switch15">
+   <property name="text">
+    <string>Cities list</string>
    </property>
   </action>
  </widget>

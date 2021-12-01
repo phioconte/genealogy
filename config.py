@@ -1,7 +1,7 @@
 """ Software configuration
     Author                        : Ph OCONTE
     Date                          : november 24, 2021
-    Last date of update           : november 28, 2021
+    Last date of update           : november 29, 2021
     Version                       : 1.0.0
 """
 import copy
@@ -54,6 +54,7 @@ def ConfigMenu(fen):
     """
     conf = Configuration(fen)
 
+    ConfigConfigInit(fen, conf)
     """ If config.txt file exists init it """
     if os.path.exists(ConfigFile):
         read = open(ConfigFile, "r")
@@ -226,7 +227,7 @@ def ConfigInitMenu(fen):
         mesx = "men%02d" % (i)
         getattr(fen, data).setTitle(fen.mess[mesx])
 
-    for i in range(0, 14):
+    for i in range(0, 15):
         data = "switch%02d" % (i)
         mesx = "swi%02d" % (i)
         getattr(fen, data).setText(fen.mess[mesx])
@@ -270,6 +271,7 @@ def ConfigInitList(fen):
     fen.IndividualTable.setHorizontalHeaderLabels(data)
     fen.IndividualTable.setColumnHidden(7, True)
 
+
 def ConfigSaveUpdate(fen, file):
     """ Update the config.txt file
     input:
@@ -298,6 +300,10 @@ def ConfigSaveUpdate(fen, file):
             write.write(line)
         i += 1
     write.close()
+
+    """ Copy the datas in the WorkingDirectory and Database """
+    fen.WorkingDirectory = copy.deepcopy(FileDirectory)
+    fen.Database = copy.deepcopy(FileName)
     return
 
 
@@ -314,4 +320,19 @@ def ConfigCreateDb(fen):
     conn.commit()
     cursor.close()
     conn.close()
+    return
+
+
+def ConfigConfigInit(fen, conf):
+    """
+    Initialization of the menu labels in the chosen language
+    input :
+        fen : pointer to window
+    output:
+        nothing
+    """
+    for i in range(10, 15):
+        data = "label%02d" % (i)
+        mesx = "lab%02d" % (i)
+        getattr(conf, data).setText(fen.mess[mesx])
     return
