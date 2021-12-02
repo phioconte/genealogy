@@ -1,7 +1,7 @@
 """ Definition of messages in French and English
     Author                        : Ph OCONTE
     Date                          : november 24, 2021
-    Date of last update           : december 1, 2021
+    Date of last update           : december 2, 2021
     Version                       : 1.1.0
 """
 
@@ -72,6 +72,8 @@ mess_fr = {
         "all15": "Nouvel évènement",
         "all16": "Modifier l'évènement",
         "all17": "Supprimer l'évènement",
+        "all18": "Modifier la ville",
+        "all19": "Supprimer la ville",
         "all30": "né le",
         "all31": "née le",
         "all32": "décédé le",
@@ -231,6 +233,8 @@ mess_gb = {
         "all15": "New Event",
         "all16": "Modify Event",
         "all17": "Delete Event",
+        "all18": "Modify city",
+        "all19": "Delete city",
         "all30": "born",
         "all31": "born",
         "all32": "deid",

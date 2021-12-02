@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>872</width>
-    <height>417</height>
+    <height>460</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,17 +16,26 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>380</y>
-     <width>301</width>
+     <x>470</x>
+     <y>420</y>
+     <width>391</width>
      <height>32</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Serif</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Close|QDialogButtonBox::Save</set>
    </property>
   </widget>
   <widget class="QTableWidget" name="CityTable">
@@ -258,7 +267,7 @@
     <rect>
      <x>220</x>
      <y>360</y>
-     <width>200</width>
+     <width>261</width>
      <height>17</height>
     </rect>
    </property>
@@ -290,7 +299,7 @@
     <rect>
      <x>220</x>
      <y>380</y>
-     <width>200</width>
+     <width>261</width>
      <height>25</height>
     </rect>
    </property>
@@ -298,7 +307,7 @@
   <widget class="QLabel" name="label16">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>490</x>
      <y>360</y>
      <width>200</width>
      <height>17</height>
@@ -320,7 +329,7 @@
   <widget class="QLineEdit" name="Country">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>490</x>
      <y>380</y>
      <width>200</width>
      <height>25</height>
@@ -349,6 +358,22 @@
    </property>
    <property name="text">
     <string>New city</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="Id">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>330</y>
+     <width>80</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

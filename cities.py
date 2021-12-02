@@ -1,14 +1,14 @@
 """ Cities list
     Author                        : Ph OCONTE
     Date                          : november 30, 2021
-    Last date of update           : december 1, 2021
+    Last date of update           : december 2, 2021
     Version                       : 1.0.0
 """
 import sqlite3
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets, uic, QtGui
 
-from dbmanagment import LinkDb, SelectTabDb
+from dbmanagment import LinkDb, SelectTabDb, InsertTabDb
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/cities.ui"
 
@@ -22,12 +22,33 @@ class CitiesManagment(QtWidgets.QDialog, Ui_Dialog):
         self.setupUi(self)
 
         self.buttonBox.accepted.connect(lambda: self.Accepted(fen))
-        self.buttonBox.rejected.connect(self.Rejected)
+        self.CityTable.itemClicked.connect(lambda: self.ShowMenuCity(fen))
 
     def Accepted(self, fen):
+        """ If a new city save it """
+        fen.Message("City")
+        # SaveNewCity(self, fen)
         return
 
-    def Rejected(self):
+    def ShowMenuCity(self, fen):
+        menu1 = QtWidgets.QMenu(self)
+        menu1.setTitle("CITY")
+        action11 = menu1.addAction(fen.mess["all18"], lambda: self.ModifyCity(fen))
+        action12 = menu1.addAction(fen.mess["all19"], lambda: self.DeleteCity(fen))
+        action1 = menu1.exec_(QtGui.QCursor.pos())
+
+    def ModifyCity(self, fen):
+        self.Id.setText(self.CityTable.item(self.CityTable.currentRow(), 7).text())
+        self.Locality.setText(self.CityTable.item(self.CityTable.currentRow(), 0).text())
+        self.City.setText(self.CityTable.item(self.CityTable.currentRow(), 1).text())
+        self.PostalCode.setText(self.CityTable.item(self.CityTable.currentRow(), 2).text())
+        self.InseeCode.setText(self.CityTable.item(self.CityTable.currentRow(), 3).text())
+        self.Department.setText(self.CityTable.item(self.CityTable.currentRow(), 4).text())
+        self.District.setText(self.CityTable.item(self.CityTable.currentRow(), 5).text())
+        self.Country.setText(self.CityTable.item(self.CityTable.currentRow(), 6).text())
+        return
+
+    def DeleteCity(self, fen):
         return
 
 
@@ -66,6 +87,10 @@ def ListCities(fen):
             for j in range(1, 8):
                 if row[j] is not None:
                     cities.CityTable.setItem(i, j-1, QTableWidgetItem(row[j]))
+                else:
+                    cities.CityTable.setItem(i, j-1, QTableWidgetItem(""))
+            line = "%s" % (row[0])
+            cities.CityTable.setItem(i, 7, QTableWidgetItem(line))
             i += 1
         cities.CityTable.resizeColumnsToContents()
         cities.CityTable.resizeRowsToContents()
@@ -78,4 +103,41 @@ def ListCities(fen):
 
     cursor.close()
     conn.close()
+    return
+
+
+def SaveNewCity(cities, fen):
+    """ Save the new city
+    input:
+        cities  : pointer to city window
+        fen     : pointer to the window
+    output:
+        nothing
+    """
+    if cities.Locality.text() or cities.City.text() or cities.PostalCode.text() \
+        or cities.InseeCode.text() or cities.Department.text()\
+        or cities.District.text() or cities.Country.text():
+        data = [None, None, None, None, None, None, None]
+        if cities.Locality.text():
+            data[0] = cities.Locality.text()
+        if cities.City.text():
+            data[1] = cities.City.text()
+        if cities.PostalCode.text():
+            data[2] = cities.PostalCode.text()
+        if cities.InseeCode.text():
+            data[3] = cities.InseeCode.text()
+        if cities.Department.text():
+            data[4] = cities.Department.text()
+        if cities.District.text():
+            data[5] = cities.District.text()
+        if cities.Country.text():
+            data[6] = cities.Country.text()
+        params = ('locality', 'city', 'postal', 'insee', 'dep',
+                  'district', 'country')
+        conn = sqlite3.connect(LinkDb(fen))
+        cursor = conn.cursor()
+        InsertTabDb(fen, cursor, 'city', params, data)
+        conn.commit()
+        cursor.close()
+        conn.close()
     return
