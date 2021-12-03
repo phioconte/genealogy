@@ -1,7 +1,7 @@
 """ Managment of events
     Author                        : Ph OCONTE
     Date                          : november 29, 2021
-    Last date of update           : december 1, 2021
+    Last date of update           : december 3, 2021
     Version                       : 1.0.0
 """
 import sqlite3
@@ -25,14 +25,22 @@ class EventManagment(QtWidgets.QDialog, Ui_Dialog):
 
         self.EEarth.clicked.connect(lambda: self.NewCity(fen))
         self.EEvent.currentTextChanged.connect(lambda: self.NewSpouse(fen))
-        self.buttonBox.accepted.connect(lambda: self.Accepted(fen))
-        self.buttonBox.rejected.connect(self.Rejected)
+        self.Save.clicked.connect(lambda: self.SaveEvent(fen))
+        self.Update.clicked.connect(lambda: self.UpdateEvent(fen))
+        self.Exit.clicked.connect(self.ExitEvent)
 
-    def Accepted(self, fen):
-        fen.Message("Accepted")
+    def SaveEvent(self, fen):
+        fen.Message("Save")
+        self.close()
         return
 
-    def Rejected(self):
+    def UpdateEvent(self, fen):
+        fen.Message("Update")
+        self.close()
+        return
+
+    def ExitEvent(self):
+        self.close()
         return
 
     def NewCity(self, fen):
@@ -80,6 +88,8 @@ def NewEvent(fen):
     event.ESexe.setCurrentText(indiv[3])
     event.EPrivate.setCurrentIndex(indiv[6])
 
+    event.Update.setEnabled(False)
+    event.Save.setEnabled(True)
     conn.commit()
     cursor.close()
     conn.close()
@@ -95,6 +105,7 @@ def ModifyEvent(fen):
     output:
         nothing
     """
+
     event = EventManagment(fen)
     event.setWindowTitle(fen.mess["all66"])
 
@@ -108,6 +119,8 @@ def ModifyEvent(fen):
         return
 
     """ Init the inputs """
+    event.Update.setEnabled(True)
+    event.Save.setEnabled(False)
     EventInitList(fen, event, cursor)
     event.EId.setText(fen.CId.text())
     event.EName.setText(indiv[1])

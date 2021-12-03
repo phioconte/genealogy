@@ -1,14 +1,14 @@
 """ Cities list
     Author                        : Ph OCONTE
     Date                          : november 30, 2021
-    Last date of update           : december 2, 2021
+    Last date of update           : december 3, 2021
     Version                       : 1.0.0
 """
 import sqlite3
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets, uic, QtGui
 
-from dbmanagment import LinkDb, SelectTabDb, InsertTabDb
+from dbmanagment import LinkDb, SelectTabDb, InsertTabDb, UpdateTabDb, DeleteTabDb
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/cities.ui"
 
@@ -21,14 +21,13 @@ class CitiesManagment(QtWidgets.QDialog, Ui_Dialog):
         Ui_Dialog.__init__(self)
         self.setupUi(self)
 
-        self.buttonBox.accepted.connect(lambda: self.Accepted(fen))
         self.CityTable.itemClicked.connect(lambda: self.ShowMenuCity(fen))
+        self.Exit.clicked.connect(self.CityExit)
+        self.Save.clicked.connect(lambda: self.SaveNewCity(fen))
+        self.Update.clicked.connect(lambda: self.SaveNewCity(fen))
 
-    def Accepted(self, fen):
-        """ If a new city save it """
-        fen.Message("City")
-        # SaveNewCity(self, fen)
-        return
+    def SaveNewCity(self, fen):
+        SaveNewCity(self, fen)
 
     def ShowMenuCity(self, fen):
         menu1 = QtWidgets.QMenu(self)
@@ -46,11 +45,26 @@ class CitiesManagment(QtWidgets.QDialog, Ui_Dialog):
         self.Department.setText(self.CityTable.item(self.CityTable.currentRow(), 4).text())
         self.District.setText(self.CityTable.item(self.CityTable.currentRow(), 5).text())
         self.Country.setText(self.CityTable.item(self.CityTable.currentRow(), 6).text())
+        """ Show Update and mask Save button """
+        self.Update.setEnabled(True)
+        self.Save.setEnabled(False)
         return
 
     def DeleteCity(self, fen):
+        Id = self.CityTable.item(self.CityTable.currentRow(), 7).text()
+        fen.Message("id : %s" % (Id))
+        conn = sqlite3.connect(LinkDb(fen))
+        cursor = conn.cursor()
+        DeleteTabDb(fen, cursor, 'city', 'id=?', (Id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        self.close()
         return
 
+    def CityExit(self):
+        self.close()
+        return
 
 def ListCities(fen):
     """ Show all the cities of the database
@@ -99,6 +113,9 @@ def ListCities(fen):
         data = "label%02d" % (i)
         mesx = "col%02d" % (i)
         getattr(cities, data).setText(fen.mess[mesx])
+    """ Mask Update button """
+    cities.Update.setEnabled(False)
+    cities.Save.setEnabled(True)
     cities.exec()
 
     cursor.close()
@@ -136,8 +153,13 @@ def SaveNewCity(cities, fen):
                   'district', 'country')
         conn = sqlite3.connect(LinkDb(fen))
         cursor = conn.cursor()
-        InsertTabDb(fen, cursor, 'city', params, data)
+        if cities.Id.text():        # update city
+            data.append(cities.Id.text())
+            UpdateTabDb(fen, cursor, 'city', params, 'id=?', data)
+        else:
+            InsertTabDb(fen, cursor, 'city', params, data)
         conn.commit()
         cursor.close()
         conn.close()
+    cities.close()
     return
