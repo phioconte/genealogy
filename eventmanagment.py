@@ -1,14 +1,16 @@
 """ Managment of events
     Author                        : Ph OCONTE
     Date                          : november 29, 2021
-    Last date of update           : december 3, 2021
+    Last date of update           : december 4, 2021
     Version                       : 1.0.0
 """
 import sqlite3
 from PyQt5 import QtWidgets, uic
 
 from util import SelList
-from dbmanagment import LinkDb, SelectTabDb
+from dbmanagment import LinkDb, SelectTabDb, DeleteTabDb, InsertTabDb
+from dbmanagment import UpdateTabDb
+from display import DisplayIndiv
 from reference import event_gb, event_fam
 from cities import ListCities
 
@@ -30,12 +32,12 @@ class EventManagment(QtWidgets.QDialog, Ui_Dialog):
         self.Exit.clicked.connect(self.ExitEvent)
 
     def SaveEvent(self, fen):
-        fen.Message("Save")
+        SaveEvent(self, fen)
         self.close()
         return
 
     def UpdateEvent(self, fen):
-        fen.Message("Update")
+        UpdateEvent(self, fen)
         self.close()
         return
 
@@ -59,7 +61,8 @@ class EventManagment(QtWidgets.QDialog, Ui_Dialog):
                 self.ESpouse.setHidden(True)
         return
 
-def NewEvent(fen):
+
+def InputNewEvent(fen):
     """ Define a new event
     input:
         fen     : pointer to window
@@ -98,7 +101,7 @@ def NewEvent(fen):
     return
 
 
-def ModifyEvent(fen):
+def InputModifyEvent(fen):
     """ Modify an existing event
     input:
         fen     : pointer to window
@@ -187,13 +190,26 @@ def ModifyEvent(fen):
     return
 
 
-def DeleteEvent(fen):
+def InputDeleteEvent(fen):
     """ Delete an existing event
     input:
         fen     : pointer to window
     output:
         nothing
     """
+    """ Read the id of the selected event """
+    SelectIdEvent = fen.IndividualTable.item(fen.IndividualTable.currentRow(), 7).text()
+
+    conn = sqlite3.connect(LinkDb(fen))
+    cursor = conn.cursor()
+    DeleteTabDb(fen, cursor, 'event', 'id=?', (SelectIdEvent,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    data = "%s %s %s" % (fen.CId.text(), fen.CName.text(), fen.CFirstname.text())
+    """ Afficher la mise à jour """
+    DisplayIndiv(fen, data)
     return
 
 
@@ -261,6 +277,7 @@ def EventInitList(fen, event, cursor):
     event.ESpouse.setHidden(True)
     return
 
+
 def EventSelectSpouses(event, fen):
     """ Select spouses
     input:
@@ -288,4 +305,140 @@ def EventSelectSpouses(event, fen):
 
     cursor.close()
     conn.close()
+    return
+
+
+def SaveEvent(event,fen):
+    """ Save the new event
+    input:
+        event   : pointer to event window
+        fen     : pointer to window
+    output:
+        nothing
+    """
+
+    """ Extract datas of event """
+    data = EventData(event, fen)
+
+    """ Insert data """
+    conn = sqlite3.connect(LinkDb(fen))
+    cursor = conn.cursor()
+    params = ('idh', 'idw', 'type', 'day', 'month', 'year', 'city',
+              'note', 'source', 'com1', 'precision', 'time')
+    InsertTabDb(fen, cursor, 'event', params, data)
+    conn.commit()
+    cursor.close()
+    conn.commit()
+
+    data = "%s %s %s" % (fen.CId.text(), fen.CName.text(), fen.CFirstname.text())
+    """ Show the new event """
+    DisplayIndiv(fen, data)
+    return
+
+
+def UpdateEvent(event, fen):
+    """ Update the datas of event
+    input:
+        event   : pointer to event window
+        fen     : pointer to window
+    output:
+        nothing
+    """
+    """ Extract datas of event """
+    data = []
+    data = EventData(event, fen)
+
+    id = fen.IndividualTable.item(fen.IndividualTable.currentRow(), 7).text()
+    data.append(id)
+    """ Update data """
+    conn = sqlite3.connect(LinkDb(fen))
+    cursor = conn.cursor()
+    params = ('idh', 'idw', 'type', 'day', 'month', 'year', 'city',
+              'note', 'source', 'com1', 'precision', 'time')
+    UpdateTabDb(fen, cursor, 'event', params, 'id=?', data)
+    conn.commit()
+    cursor.close()
+    conn.commit()
+
+    data = "%s %s %s" % (fen.CId.text(), fen.CName.text(), fen.CFirstname.text())
+    """ Show the update """
+    DisplayIndiv(fen, data)
+    return
+
+
+def EventData(event, fen):
+    """ Extract the datas of event
+    input:
+        event   : pointer to event window
+        fen     : pointer to window
+    output:
+        data    : extract of datas
+    """
+    data = [None, None, None, None, None, None, None,
+            None, None, None, None, None]
+    """ Select id """
+    data[0] = event.EId.text()
+    data[1] = event.EId.text()
+    """ Select the type of event """
+    data[2] = event_gb[event.EEvent.currentIndex()]
+    if event.EDay.text():
+        data[3] = event.EDay.text()
+    month = event.EMonth.currentIndex()
+    if month != 0:
+        data[4] = month
+    if event.EYear.text():
+        data[5] = event.EYear.text()
+    city = event.ECity.currentIndex
+    if city != 0:
+        data[6] = EventExtractCity(fen, event.ECity.currentText())
+    if event.ENote.text():
+        data[7] = event.ENote.text()
+    if event.ESource.text():
+        data[8] = event.ESource.text()
+    if event.EInformation.text():
+        data[9] = event.EInformation.text()
+    data[10] = event.EEstimate.currentIndex()
+    if event.ETime.text():
+        data[11] = event.ETime.text()
+    """ Verify if spouse is define """
+    if data[2] in event_fam:
+        if event.ESpouse.currentIndex() != 0:
+            spouse = event.ESpouse.currentText().split()
+            data[1] = spouse[0]
+
+    fen.Message(data)
+    return data
+
+
+def EventExtractCity(fen, incity):
+    """ Extract the complete city
+    input:
+        fen       : pointer to window
+        incity    : city to define
+    output
+        outcity   : city
+    """
+    loccity = []
+    city = incity.split()
+    loccity.append(city[0])
+    loccity.append(' '.join(city[1:]))
+
+    conn = sqlite3.connect(LinkDb(fen))
+    cursor = conn.cursor()
+
+    params = ('locality', 'city', 'Insee', 'Postal', 'dep',
+               'district', 'country')
+    row = SelectTabDb(fen, cursor, 'city', params, 'Postal=? AND city=?',
+                      (loccity), 0, 'null')
+    if row:
+        outcity = "%s,%s,%s,%s,%s,%s,%s" %(row[0], row[1], row[2], row[3],
+                                           row[4], row[5], row[6])
+    else:
+        outcity = None
+
+    cursor.close()
+    conn.close()
+    return outcity
+
+
     return

@@ -1,7 +1,7 @@
 """ Genealogy management program
  Author                        : Ph OCONTE
  Date                          : november 24, 2021
- Date of last update           : december 1, 2021
+ Date of last update           : december 5, 2021
  Version                       : 1.0.0
 """
 import sys
@@ -13,9 +13,10 @@ from display import DisplayIn, DisplayIndiv
 from gedcomreadwrite import GedcomRead, GedcomWrite
 from pdfwrite import PdfWrite
 from htmlwrite import HtmlWrite
-from eventmanagment import NewEvent, ModifyEvent, DeleteEvent
+from eventmanagment import InputNewEvent, InputModifyEvent, InputDeleteEvent
 from cities import ListCities
-from tools import ToolsDbtoTxt
+from tools import ToolsDbtoTxt, ToolsPrivatePublic, ToolsAnalysis
+from about import AboutVersion, AboutTutorial, AboutLog
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/genealogy_V1.ui"
 
@@ -35,7 +36,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         WebSite = ""                # Web site
         PdfFile = ""                # PDF file
         Language = "english"        # default initialization of the English language
-
+        SaveDirectory = ""          # Saving Directory
         self.switch08.triggered.connect(self.MConfig)   # Configuration command
 
         """
@@ -87,8 +88,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         management of a new event
         IndividualTable : Events table
+        Button01        : New event
         """
         self.IndividualTable.itemClicked.connect(self.ShowMenuEvent)
+        self.Button01.clicked.connect(self.NewEvent)
 
         """
         Tools
@@ -98,7 +101,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         switch15   : List of cities
         """
         self.switch11.triggered.connect(self.DbtoTxt)
+        self.switch12.triggered.connect(self.Analyse)
+        self.switch13.triggered.connect(self.Private)
         self.switch15.triggered.connect(self.Cities)
+
+        """
+        Tools
+        switch16   : Version
+        switch17   : Tutorial
+        switch18   : Log
+        """
+        self.switch16.triggered.connect(self.Version)
+        self.switch17.triggered.connect(self.Tutorial)
+        self.switch18.triggered.connect(self.Log)
 
     def MConfig(self):          # Configuration command
         ConfigMenu(fen)
@@ -243,22 +258,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return
 
     def NewEvent(self):
-        NewEvent(fen)
+        InputNewEvent(fen)
         return
 
     def ModifyEvent(self):
-        ModifyEvent(fen)
+        InputModifyEvent(fen)
         return
 
     def DeleteEvent(self):
-        DeleteEvent(fen)
+        InputDeleteEvent(fen)
         return
 
     """
     Tools
     DbtoTxt    : Database to *.txt file
-    switch12   : Analyse database
-    switch13   : Private to public
+    Analyse    : Analyse database
+    Private   : Private to public
     ListCities : List of cities
     """
 
@@ -266,8 +281,34 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         ToolsDbtoTxt(fen)
         return
 
+    def Analyse(self):
+        ToolsAnalysis(fen)
+        return
+
+    def Private(self):
+        ToolsPrivatePublic(fen)
+        return
+
     def Cities(self):
         ListCities(fen)
+        return
+
+    """
+    Tools
+    Version    : Version
+    Tutorial   : Tutorial
+    Log        : Log
+    """
+    def Version(self):
+        AboutVersion(self)
+        return
+
+    def Tutorial(self):
+        AboutTutorial(self)
+        return
+
+    def Log(self):
+        AboutLog(self)
         return
 
     def Message(self, mes):     # Show message to statusbar
@@ -282,6 +323,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # self.WriteTexte.insertPlainText("%s\n" % (mes))
         # self.log.insertPlainText("%s\n" % (mes))
         self.statusbar.showMessage("%s\n" % (mes), 0)
+        LogFile = "%s/log.txt" % (fen.SaveDirectory)
+        """ Write to the log file """
+        file = open(LogFile, 'a')
+        file.write("%s\n" % (mes))
+        file.close()
         return
 
 
@@ -295,4 +341,3 @@ if __name__ == "__main__":
     DisplayIn(fen)
 
     sys.exit(app.exec_())
-

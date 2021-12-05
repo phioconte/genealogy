@@ -1,7 +1,7 @@
 """ Definition of messages in French and English
     Author                        : Ph OCONTE
     Date                          : november 24, 2021
-    Date of last update           : december 2, 2021
+    Date of last update           : december 5, 2021
     Version                       : 1.1.0
 """
 
@@ -13,6 +13,7 @@ mess_fr = {
         "men03": "Edition",
         "men04": "Généalogie",
         "men05": "Outils",
+        "men06": "A propos",
         "swi00": "Ouvrir",
         "swi01": "CSV",
         "swi02": "GEDCOM",
@@ -28,6 +29,10 @@ mess_fr = {
         "swi12": "Analyse",
         "swi13": "Privé/Public",
         "swi14": "Renommer",
+        "swi15": "Liste des villes",
+        "swi16": "Version",
+        "swi17": "Tutoriel",
+        "swi18": "Log",
         "lab00": "Père",
         "lab01": "Mère",
         "lab02": "Frères et soeurs",
@@ -91,6 +96,7 @@ mess_fr = {
         "all65": "public",
         "all66": "Evènement",
         "all67": "Liste des villes",
+        "all68": "Fichier log",
         "lis00": "Naissance",
         "lis01": "Baptème",
         "lis02": "Mariage",
@@ -165,6 +171,10 @@ mess_fr = {
         "htm01": "1 - Création de la liste des individus",
         "htm02": "2 - Ecriture des informations individu par individu",
         "htm03": "3 - Traitement terminé",
+        "ana00": "Individu sans parent, enfant et conjoint :",
+        "ana01": "individu de plus de 99 ans et toujours en vie :",
+        "ana02": "Naissance : ",
+        "but01": "Nouvel évènement",
        }
 
 mess_gb = {
@@ -174,6 +184,7 @@ mess_gb = {
         "men03": "Edit",
         "men04": "Genealogy",
         "men05": "Tools",
+        "men06": "About",
         "swi00": "Open",
         "swi01": "CSV",
         "swi02": "GEDCOM",
@@ -189,6 +200,10 @@ mess_gb = {
         "swi12": "Analyse",
         "swi13": "Private/Public",
         "swi14": "Rename",
+        "swi15": "Cities list",
+        "swi16": "Version",
+        "swi17": "Tutorial",
+        "swi18": "Log",
         "lab00": "Father",
         "lab01": "Mother",
         "lab02": "Brothers and sisters",
@@ -252,6 +267,7 @@ mess_gb = {
         "all65": "public",
         "all66": "Event",
         "all67": "Cities list",
+        "all68": "Log file",
         "lis00": "Birth",
         "lis01": "Baptism",
         "lis02": "Wedding",
@@ -325,6 +341,10 @@ mess_gb = {
         "htm01": "1 - creation of individuals liste",
         "htm02": "2 - Writing individual information by individual",
         "htm03": "3 - Process finished",
+        "ana00": "Individuals without parent, child and spouse :",
+        "ana01": "individuals over 99 years old and still alive :",
+        "ana02": "Birth : ",
+        "but01": "New event",
         }
 
 language = ['english', 'français']

@@ -1,3 +1,3 @@
 {
-    "files": ["util.py","genealogy_V1.ui","htmlwrite.py","messages.py","config.py","opendatabase.py","eventmanagment.py","event.ui","gedcomreadwrite.py","style.css","pdfwrite.py","display.py","main.py","cities.py","reference.py","cities.ui","config.ui","dbmanagment.py","tools.py"]
+    "files": ["dbmanagment.py","log.ui","pdfwrite.py","gedcomreadwrite.py","tools.py","cities.py","cities.ui","about.py","reference.py","genealogy_V1.ui","main.py","messages.py","util.py","display.py","config.py","htmlwrite.py","style.css","eventmanagment.py","opendatabase.py","config.ui","event.ui"]
 }

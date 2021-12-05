@@ -95,10 +95,19 @@
     </property>
     <addaction name="switch08"/>
    </widget>
+   <widget class="QMenu" name="menu06">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="switch16"/>
+    <addaction name="switch17"/>
+    <addaction name="switch18"/>
+   </widget>
    <addaction name="menu00"/>
    <addaction name="menu03"/>
    <addaction name="menu04"/>
    <addaction name="menu05"/>
+   <addaction name="menu06"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -621,6 +630,19 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
+    <widget class="QPushButton" name="Button01">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>50</y>
+       <width>151</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>New event</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <action name="switch00">
@@ -716,6 +738,21 @@
   <action name="switch15">
    <property name="text">
     <string>Cities list</string>
+   </property>
+  </action>
+  <action name="switch16">
+   <property name="text">
+    <string>Version</string>
+   </property>
+  </action>
+  <action name="switch17">
+   <property name="text">
+    <string>Tutotrial</string>
+   </property>
+  </action>
+  <action name="switch18">
+   <property name="text">
+    <string>Log</string>
    </property>
   </action>
  </widget>

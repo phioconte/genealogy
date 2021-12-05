@@ -1,7 +1,7 @@
 """ Definition of tools
  Author                        : Ph OCONTE
  Date                          : november 30, 2021
- Date of last update           : november 30, 2021
+ Date of last update           : december 5, 2021
  Version                       : 1.1.0
 """
 import sqlite3
@@ -287,7 +287,7 @@ def ToolsPrivatePublicWedding(fen, cursor, date):
     return
 
 
-def ToolAnalysis(fen):
+def ToolsAnalysis(fen):
     """
     analyse the database
     input:
@@ -343,7 +343,7 @@ def ToolAnalysis(fen):
                     if birth[0]:
                         age = year - int(birth[0])
                         if age > 99:
-                            fen.Message("%04d %-20s %-30s : %s %04d (%04d)" %
+                            fen.Message("%04d %-20s %-25s : %s %04d (%04d)" %
                                         (row[0], row[1], row[2], fen.mess["ana02"],
                                          int(birth[0]), age))
     return

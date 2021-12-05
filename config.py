@@ -1,11 +1,12 @@
 """ Software configuration
     Author                        : Ph OCONTE
     Date                          : november 24, 2021
-    Last date of update           : november 29, 2021
+    Last date of update           : december 5, 2021
     Version                       : 1.0.0
 """
 import copy
 import os
+import datetime
 import sqlite3
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets, uic
@@ -16,7 +17,6 @@ from dbmanagment import LinkDb, DefDb
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/config.ui"
 
 Ui_Dialog, QtBaseClass = uic.loadUiType(qtCreatorFile)
-ConfigFile = "config.txt"
 
 
 class Configuration(QtWidgets.QDialog, Ui_Dialog):
@@ -24,10 +24,12 @@ class Configuration(QtWidgets.QDialog, Ui_Dialog):
         QtWidgets.QDialog.__init__(self, fen)
         Ui_Dialog.__init__(self)
         self.setupUi(self)
+        """ By default initialize the english version of messages """
+        fen.mess = copy.deepcopy(mess_gb)
 
         self.SelectWorkingDirectory.clicked.connect(self.CSelDir)
         self.SelectWebSite.clicked.connect(self.CSelWeb)
-        self.buttonBox.accepted.connect(self.Accepted)
+        self.buttonBox.accepted.connect(lambda: self.Accepted(fen))
         self.buttonBox.rejected.connect(self.Rejected)
 
     def CSelDir(self):                  # Select working directory
@@ -37,8 +39,8 @@ class Configuration(QtWidgets.QDialog, Ui_Dialog):
     def CSelWeb(self):                  # Select web site
         SelectWebSite(self)
 
-    def Accepted(self):                 # Write the config.txt file
-        WriteConfigFile(self)
+    def Accepted(self, fen):                 # Write the config.txt file
+        WriteConfigFile(self, fen)
 
     def Rejected(self):
         return
@@ -56,8 +58,9 @@ def ConfigMenu(fen):
 
     ConfigConfigInit(fen, conf)
     """ If config.txt file exists init it """
-    if os.path.exists(ConfigFile):
-        read = open(ConfigFile, "r")
+    LineFile = ConfigFileDefine(fen)
+    if os.path.exists(LineFile):
+        read = open(LineFile, "r")
         lines = read.readlines()
         read.close()
         for i in range(0, len(lines)):
@@ -118,7 +121,7 @@ def SelectWebSite(conf):
     return
 
 
-def WriteConfigFile(conf):
+def WriteConfigFile(conf, fen):
     """
     Saving the config.txt file
     input :
@@ -146,7 +149,8 @@ def WriteConfigFile(conf):
     else:
         RefPdfFile = "%s.pdf" % (conf.PdfFile.text())
 
-    write = open(ConfigFile, "w")
+    LineFile = ConfigFileDefine(fen)
+    write = open(LineFile, "w")
     if write:
         write.write("%s\n" % (conf.WorkingDirectory.text()))
         write.write("%s\n" % (RefDatabase))
@@ -166,8 +170,16 @@ def Config(fen):
         nothing
     """
 
+    """ The config.txt file is save in the directory
+        expanduser/.genealogie
+    """
+    LineFile = ConfigFileDefine(fen)
+
+    """ Init the log file """
+    ConfigInitLogFile(fen)
+
     """  if config.txt file exists, init the labels """
-    if os.path.exists(ConfigFile):
+    if os.path.exists(LineFile):
         ReadConfig(fen)                 # Read the config file
         return
     else:
@@ -190,7 +202,8 @@ def ReadConfig(fen):
     fen.mess = copy.deepcopy(mess_gb)
 
     """ Read the config.txt file """
-    read = open(ConfigFile, "r")
+    LineFile = ConfigFileDefine(fen)
+    read = open(LineFile, "r")
     lines = read.readlines()
     read.close()
     for i in range(0, len(lines)):
@@ -222,12 +235,12 @@ def ConfigInitMenu(fen):
     output:
         nothing
     """
-    for i in range(0, 6):
+    for i in range(0, 7):
         data = "menu%02d" % (i)
         mesx = "men%02d" % (i)
         getattr(fen, data).setTitle(fen.mess[mesx])
 
-    for i in range(0, 15):
+    for i in range(0, 19):
         data = "switch%02d" % (i)
         mesx = "swi%02d" % (i)
         getattr(fen, data).setText(fen.mess[mesx])
@@ -246,8 +259,9 @@ def ConfigInitLabel(fen):
         data = "label%02d" % (i)
         mesx = "lab%02d" % (i)
         getattr(fen, data).setText(fen.mess[mesx])
-    return
 
+    getattr(fen, "Button01").setText(fen.mess["but01"])
+    return
 
 def ConfigInitList(fen):
     """
@@ -285,12 +299,13 @@ def ConfigSaveUpdate(fen, file):
     FileDirectory = os.path.dirname(file)
 
     """ Read the config.txt file """
-    read = open(ConfigFile, "r")
+    LineFile = ConfigFileDefine(fen)
+    read = open(LineFile, "r")
     lines = read.readlines()
     read.close()
 
     """ Write the config.txt update file """
-    write = open(ConfigFile, "w")
+    write = open(LineFile, "w")
     write.write("%s\n" % (FileDirectory))
     write.write("%s\n" % (FileName))
 
@@ -336,3 +351,50 @@ def ConfigConfigInit(fen, conf):
         mesx = "lab%02d" % (i)
         getattr(conf, data).setText(fen.mess[mesx])
     return
+
+
+def ConfigFileDefine(fen):
+    """
+    Define the config file
+    input :
+        fen     : pointer to window
+    output:
+        line    : path to config file
+    The config.txt file is save in the directory expanduser/.genealogie
+    """
+    Directory = "%s/%s" % (os.path.expanduser('~'), ".genealogy")
+    fen.SaveDirectory = copy.deepcopy(Directory)
+    """ Verify if the directory exists """
+    if not os.path.exists(Directory):
+        os.makedirs(Directory)
+    line = "%s/%s" % (Directory, "config.txt")
+    return line
+
+
+def ConfigInitLogFile(fen):
+    """
+    Init the log file
+    input :
+        fen     : pointer to window
+    output:
+        Nothing
+    """
+    LogFile = ConfigLogFile(fen)
+    """ Init the log file """
+    file = open(LogFile, 'w')
+
+    date = datetime.datetime.now()
+    file.write("Date : %s/%s/%s-%02d:%02d:%02d:%06d\n" % (date.day, date.month,
+               date.year, date.hour, date.minute, date.second, date.microsecond))
+    file.close()
+
+
+def ConfigLogFile(fen):
+    """
+    Define the name of the log file
+    input :
+        fen     : pointer to window
+    output:
+        line    : log file
+    """
+    return "%s/log.txt" % (fen.SaveDirectory)

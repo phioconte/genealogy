@@ -1,7 +1,7 @@
 """ Generating a pdf file
     Author                        : Ph OCONTE
     Date                          : november 29, 2021
-    Date of last update           : november 29, 2021
+    Date of last update           : december 5, 2021
     Version                       : 1.0.0
 """
 import sqlite3
@@ -609,10 +609,12 @@ def PdfWriteAnalysLine(fen, line):
         data    : line after analyse
     """
     data = []
-    for i in range(0, len(line)):
-        if line[i] == "\u2019":
-            data.append("'")
-        else:
-            data.append(line[i])
-    outputline = ''.join(data)
-    return outputline
+    if line is not None:
+        for i in range(0, len(line)):
+            if line[i] == "\u2019":
+                data.append("'")
+            else:
+                data.append(line[i])
+        outputline = ''.join(data)
+        return outputline
+    return ""
