@@ -1,7 +1,7 @@
 """ Genealogy management program
  Author                        : Ph OCONTE
  Date                          : november 24, 2021
- Date of last update           : december 5, 2021
+ Date of last update           : december 6, 2021
  Version                       : 1.0.0
 """
 import sys
@@ -17,6 +17,7 @@ from eventmanagment import InputNewEvent, InputModifyEvent, InputDeleteEvent
 from cities import ListCities
 from tools import ToolsDbtoTxt, ToolsPrivatePublic, ToolsAnalysis
 from about import AboutVersion, AboutTutorial, AboutLog
+from individual import NewIndividual, UpdateIndividual
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/genealogy_V1.ui"
 
@@ -94,6 +95,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.Button01.clicked.connect(self.NewEvent)
 
         """
+        define indidual and links of individual
+        switch09    : New individual
+        switch10    : Define links of ,individual
+        """
+        self.switch09.triggered.connect(self.NewIndividual)
+        self.switch10.triggered.connect(self.DefineLinks)
+
+        """
         Tools
         switch11   : Database to *.txt file
         switch12   : Analyse database
@@ -150,6 +159,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return
 
     def IndividualLink(self):
+        UpdateIndividual(fen)
         return
 
     def SIndiv(self):
@@ -267,6 +277,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def DeleteEvent(self):
         InputDeleteEvent(fen)
+        return
+
+    """
+    define indidual and links of individual
+    switch09    : New individual
+    switch10    : Define links of ,individual
+    """
+
+    def NewIndividual(self):
+        NewIndividual(fen)
+        return
+
+    def DefineLinks(self):
         return
 
     """

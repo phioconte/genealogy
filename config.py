@@ -263,6 +263,7 @@ def ConfigInitLabel(fen):
     getattr(fen, "Button01").setText(fen.mess["but01"])
     return
 
+
 def ConfigInitList(fen):
     """
     Initialization the lists in the chosen language

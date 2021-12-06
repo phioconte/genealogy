@@ -57,6 +57,10 @@
      <property name="title">
       <string>Export</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>ressources_png/save.jpg</normaloff>ressources_png/save.jpg</iconset>
+     </property>
      <addaction name="switch03"/>
      <addaction name="switch04"/>
      <addaction name="separator"/>
@@ -247,6 +251,12 @@
        <height>50</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QListWidget" name="PaternelGrandMother">
      <property name="geometry">
@@ -256,6 +266,12 @@
        <width>220</width>
        <height>50</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
     </widget>
     <widget class="QListWidget" name="MaternelGrandFather">
@@ -267,6 +283,12 @@
        <height>50</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QListWidget" name="MaternelGrandMother">
      <property name="geometry">
@@ -276,6 +298,12 @@
        <width>220</width>
        <height>50</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
     </widget>
     <widget class="QListWidget" name="Father">
@@ -287,6 +315,12 @@
        <height>60</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QListWidget" name="Mother">
      <property name="geometry">
@@ -296,6 +330,12 @@
        <width>240</width>
        <height>60</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
     </widget>
     <widget class="QListWidget" name="Individual">
@@ -307,6 +347,12 @@
        <height>80</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QListWidget" name="Children">
      <property name="geometry">
@@ -316,6 +362,12 @@
        <width>260</width>
        <height>80</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
     </widget>
     <widget class="QListWidget" name="BrothersandSisters">
@@ -327,6 +379,12 @@
        <height>80</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QListWidget" name="Spouse">
      <property name="geometry">
@@ -337,6 +395,12 @@
        <height>80</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QLabel" name="label00">
      <property name="geometry">
@@ -346,6 +410,12 @@
        <width>67</width>
        <height>17</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Father</string>
@@ -360,6 +430,12 @@
        <height>17</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Mother</string>
      </property>
@@ -372,6 +448,12 @@
        <width>151</width>
        <height>17</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Brothers and sisters</string>
@@ -386,6 +468,12 @@
        <height>17</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Spouses</string>
      </property>
@@ -398,6 +486,12 @@
        <width>67</width>
        <height>17</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Children</string>
@@ -638,6 +732,12 @@
        <width>151</width>
        <height>25</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Serif</family>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>New event</string>
