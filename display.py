@@ -85,11 +85,9 @@ def DisplayIndiv(fen, data):
     """ Search the individual and is parents """
     fen.CId.setText(indiv)
 
-    # fen.enapublic = 0
     fen.CName.clear()
     fen.CFirstname.clear()
     fen.CSexe.clear()
-    # fen.CaPublic.setCurrentIndex(0)
     param = ('name', 'firstname', 'sexe', 'idfather', 'idmother', 'public')
     row = SelectTabDb(fen, cursor, 'indiv', param, 'id=?',
                       (indiv,), 0, 'null')
@@ -100,8 +98,10 @@ def DisplayIndiv(fen, data):
             fen.CFirstname.setText(row[1])
         if row[2]:
             fen.CSexe.setText(row[2])
-    #    if int(row[5]) == 1:
-    #        fen.CaPublic.setCurrentIndex(1)
+        if int(row[5]) == 0:
+            fen.CPrivate.setText(fen.mess["all64"])
+        else:
+            fen.CPrivate.setText(fen.mess["all65"])
 
     fen.Individual.clear()
     DisplayCasex(fen, indiv, fen.Individual, cursor, 1)
@@ -136,7 +136,6 @@ def DisplayIndiv(fen, data):
     cursor.close()
     conn.close()
 
-    # fen.enapublic = 1
     return
 
 

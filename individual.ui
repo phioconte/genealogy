@@ -304,6 +304,38 @@
      <normaloff>ressources_png/quitter.png</normaloff>ressources_png/quitter.png</iconset>
    </property>
   </widget>
+  <widget class="QComboBox" name="Private">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>100</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label67">
+   <property name="geometry">
+    <rect>
+     <x>509</x>
+     <y>80</y>
+     <width>141</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Serif</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>PRIVATE / PUBLIC</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

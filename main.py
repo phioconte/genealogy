@@ -14,6 +14,7 @@ from gedcomreadwrite import GedcomRead, GedcomWrite
 from pdfwrite import PdfWrite
 from htmlwrite import HtmlWrite
 from eventmanagment import InputNewEvent, InputModifyEvent, InputDeleteEvent
+from eventmanagment import EventSelectPhoto
 from cities import ListCities
 from tools import ToolsDbtoTxt, ToolsPrivatePublic, ToolsAnalysis
 from about import AboutVersion, AboutTutorial, AboutLog
@@ -93,6 +94,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         self.IndividualTable.itemClicked.connect(self.ShowMenuEvent)
         self.Button01.clicked.connect(self.NewEvent)
+        self.CSelectPhoto.clicked.connect(self.PhotoEvent)
 
         """
         define indidual and links of individual
@@ -100,7 +102,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         switch10    : Define links of ,individual
         """
         self.switch09.triggered.connect(self.NewIndividual)
-        self.switch10.triggered.connect(self.DefineLinks)
+        self.switch10.triggered.connect(self.IndividualLink)
 
         """
         Tools
@@ -256,6 +258,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     """
     management of a new event
     ShowMenuEvent  : Events table
+    PhotoEvent     : Select the photo
     """
 
     def ShowMenuEvent(self, pos):
@@ -279,17 +282,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         InputDeleteEvent(fen)
         return
 
+    def PhotoEvent(self):
+        EventSelectPhoto(fen)
+        return
+
     """
     define indidual and links of individual
-    switch09    : New individual
-    switch10    : Define links of ,individual
+    NewIndividual    : New individual
+    switch10         : Define links of ,individual
     """
 
     def NewIndividual(self):
         NewIndividual(fen)
-        return
-
-    def DefineLinks(self):
         return
 
     """

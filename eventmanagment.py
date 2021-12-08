@@ -1,13 +1,15 @@
 """ Managment of events
     Author                        : Ph OCONTE
     Date                          : november 29, 2021
-    Last date of update           : december 4, 2021
+    Last date of update           : december 8, 2021
     Version                       : 1.0.0
 """
+import os
 import sqlite3
+from PyQt5.QtGui import QPixmap
 from PyQt5 import QtWidgets, uic
 
-from util import SelList
+from util import SelList, ReadFile
 from dbmanagment import LinkDb, SelectTabDb, DeleteTabDb, InsertTabDb
 from dbmanagment import UpdateTabDb
 from display import DisplayIndiv
@@ -203,6 +205,7 @@ def InputDeleteEvent(fen):
     conn = sqlite3.connect(LinkDb(fen))
     cursor = conn.cursor()
     DeleteTabDb(fen, cursor, 'event', 'id=?', (SelectIdEvent,))
+    """ If event in event_fam, delete also family """
     conn.commit()
     cursor.close()
     conn.close()
@@ -308,7 +311,7 @@ def EventSelectSpouses(event, fen):
     return
 
 
-def SaveEvent(event,fen):
+def SaveEvent(event, fen):
     """ Save the new event
     input:
         event   : pointer to event window
@@ -326,6 +329,9 @@ def SaveEvent(event,fen):
     params = ('idh', 'idw', 'type', 'day', 'month', 'year', 'city',
               'note', 'source', 'com1', 'precision', 'time')
     InsertTabDb(fen, cursor, 'event', params, data)
+    if data[2] in event_fam:
+        """ Define a new family """
+        EventNewFamily(fen, cursor, data)
     conn.commit()
     cursor.close()
     conn.commit()
@@ -356,6 +362,9 @@ def UpdateEvent(event, fen):
     params = ('idh', 'idw', 'type', 'day', 'month', 'year', 'city',
               'note', 'source', 'com1', 'precision', 'time')
     UpdateTabDb(fen, cursor, 'event', params, 'id=?', data)
+    if data[2] in event_fam:
+        """ Define a new family """
+        EventNewFamily(fen, cursor, data)
     conn.commit()
     cursor.close()
     conn.commit()
@@ -404,9 +413,11 @@ def EventData(event, fen):
     if data[2] in event_fam:
         if event.ESpouse.currentIndex() != 0:
             spouse = event.ESpouse.currentText().split()
-            data[1] = spouse[0]
-
-    fen.Message(data)
+            if event.ESexe.currentText() == 'M':
+                data[1] = spouse[0]
+            else:
+                data[1] = data[0]
+                data[0] = spouse[0]
     return data
 
 
@@ -419,7 +430,12 @@ def EventExtractCity(fen, incity):
         outcity   : city
     """
     loccity = []
-    city = incity.split()
+    outcity = None
+    if len(incity) > 0:
+        city = incity.split()
+    else:
+        return outcity
+
     loccity.append(city[0])
     loccity.append(' '.join(city[1:]))
 
@@ -427,18 +443,75 @@ def EventExtractCity(fen, incity):
     cursor = conn.cursor()
 
     params = ('locality', 'city', 'Insee', 'Postal', 'dep',
-               'district', 'country')
+              'district', 'country')
     row = SelectTabDb(fen, cursor, 'city', params, 'Postal=? AND city=?',
                       (loccity), 0, 'null')
     if row:
-        outcity = "%s,%s,%s,%s,%s,%s,%s" %(row[0], row[1], row[2], row[3],
-                                           row[4], row[5], row[6])
-    else:
-        outcity = None
+        outcity = "%s,%s,%s,%s,%s,%s,%s" % (row[0], row[1], row[2], row[3],
+                                            row[4], row[5], row[6])
 
     cursor.close()
     conn.close()
     return outcity
 
+    return
 
+
+def EventNewFamily(fen, cursor, data):
+    """ If necessary, define a new family
+    input:
+        fen     : pointer to window
+        cursor  : pointer to database
+        event   : pointer to event window
+        data    : data of event
+    output:
+        nothing
+    """
+    row = SelectTabDb(fen, cursor, 'fam', ('*',), 'idh=? AND idw=?',
+                      (data[0], data[1]), 0, 'null')
+    if row:
+        return
+    """ Create the new family """
+    fam = SelectTabDb(fen, cursor, 'fam', ('id',), 'null', 0, 0,
+                      'ORDER BY id DESC')
+    if fam:
+        i = int(fam[0]) + 1
+    else:
+        """ first family """
+        i = 1
+    fen.Message("Première famille : %s" % (i))
+    InsertTabDb(fen, cursor, 'fam', ('id', 'idh', 'idw'),
+                (i, data[0], data[1]))
+    return
+
+
+def EventSelectPhoto(fen):
+    """
+    Search the photo for the individual id selected
+    input:
+        fen     : pointer to window
+    output:
+        nothing
+    """
+
+    """ Ask the file to read """
+    photo = ReadFile(fen, fen.mess["all40"], fen.mess["all41"],
+                     "*.jpg", fen.mess["all42"], fen.WorkingDirectory)
+    extension = os.path.splitext(photo)
+
+    conn = sqlite3.connect(LinkDb(fen))
+    cursor = conn.cursor()
+    if photo:
+        params = ('indiv', 'file', 'form')
+        values = (fen.CId.text(), photo, extension[1][1:])
+        InsertTabDb(fen, cursor, 'object', params, values)
+
+        """ Show the photo """
+        image = photo
+        pixmap = QPixmap(image)
+        fen.CPhoto.setPixmap(pixmap)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
     return

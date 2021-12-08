@@ -1,7 +1,7 @@
 """ Cities list
     Author                        : Ph OCONTE
     Date                          : november 30, 2021
-    Last date of update           : december 3, 2021
+    Last date of update           : december 8, 2021
     Version                       : 1.0.0
 """
 import sqlite3
@@ -40,8 +40,8 @@ class CitiesManagment(QtWidgets.QDialog, Ui_Dialog):
         self.Id.setText(self.CityTable.item(self.CityTable.currentRow(), 7).text())
         self.Locality.setText(self.CityTable.item(self.CityTable.currentRow(), 0).text())
         self.City.setText(self.CityTable.item(self.CityTable.currentRow(), 1).text())
-        self.PostalCode.setText(self.CityTable.item(self.CityTable.currentRow(), 2).text())
-        self.InseeCode.setText(self.CityTable.item(self.CityTable.currentRow(), 3).text())
+        self.PCode.setText(self.CityTable.item(self.CityTable.currentRow(), 2).text())
+        self.ICode.setText(self.CityTable.item(self.CityTable.currentRow(), 3).text())
         self.Department.setText(self.CityTable.item(self.CityTable.currentRow(), 4).text())
         self.District.setText(self.CityTable.item(self.CityTable.currentRow(), 5).text())
         self.Country.setText(self.CityTable.item(self.CityTable.currentRow(), 6).text())
@@ -66,6 +66,7 @@ class CitiesManagment(QtWidgets.QDialog, Ui_Dialog):
         self.close()
         return
 
+
 def ListCities(fen):
     """ Show all the cities of the database
     input:
@@ -82,7 +83,9 @@ def ListCities(fen):
     conn = sqlite3.connect(LinkDb(fen))
     cursor = conn.cursor()
 
-    rows = SelectTabDb(fen, cursor, 'city', ('*',), 'null', 0, 1,
+    rows = SelectTabDb(fen, cursor, 'city',
+                       ('id', 'locality', 'city', 'Postal', 'Insee', 'dep',
+                        'district', 'country'), 'null', 0, 1,
                        'ORDER BY city')
     """ Init the header in the selected language """
     data = []
@@ -131,18 +134,20 @@ def SaveNewCity(cities, fen):
     output:
         nothing
     """
-    if cities.Locality.text() or cities.City.text() or cities.PostalCode.text() \
-        or cities.InseeCode.text() or cities.Department.text()\
+    if cities.Locality.text() or cities.City.text() or cities.PCode.text() \
+        or cities.ICode.text() or cities.Department.text()\
         or cities.District.text() or cities.Country.text():
         data = [None, None, None, None, None, None, None]
         if cities.Locality.text():
             data[0] = cities.Locality.text()
         if cities.City.text():
             data[1] = cities.City.text()
-        if cities.PostalCode.text():
-            data[2] = cities.PostalCode.text()
-        if cities.InseeCode.text():
-            data[3] = cities.InseeCode.text()
+        if cities.PCode.text():
+            fen.Message("Postal Code : %s" % (cities.PCode.text()))
+            data[2] = cities.PCode.text()
+        if cities.ICode.text():
+            fen.Message("INSEE Code : %s" % (cities.ICode.text()))
+            data[3] = cities.ICode.text()
         if cities.Department.text():
             data[4] = cities.Department.text()
         if cities.District.text():
@@ -155,8 +160,10 @@ def SaveNewCity(cities, fen):
         cursor = conn.cursor()
         if cities.Id.text():        # update city
             data.append(cities.Id.text())
+            fen.Message(data)
             UpdateTabDb(fen, cursor, 'city', params, 'id=?', data)
         else:
+            fen.Message(data)
             InsertTabDb(fen, cursor, 'city', params, data)
         conn.commit()
         cursor.close()

@@ -510,7 +510,7 @@ def PdfWriteCities(fen, cursor, doc):
     params = ('locality', 'city', 'Insee', 'Postal', 'dep', 'district',
               'country')
     cities = SelectTabDb(fen, cursor, 'city', params, 'null', 0,
-                         1, 'null')
+                         1, 'ORDER BY city, Postal')
     datas = []
     if cities:
         for city in cities:
@@ -519,7 +519,7 @@ def PdfWriteCities(fen, cursor, doc):
                 # line[i] = city[i].encode('latin-1', 'replace').decode('latin-1')
                 line[i] = PdfWriteAnalysLine(fen, city[i])
                 if i == 2 or i == 3:
-                    if line[i]:
+                    if line[i].isnumeric():
                         line[i] = "%05d" % (int(line[i]))
             datas.append(line)
     if datas:
