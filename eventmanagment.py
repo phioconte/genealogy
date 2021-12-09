@@ -1,7 +1,7 @@
 """ Managment of events
     Author                        : Ph OCONTE
     Date                          : november 29, 2021
-    Last date of update           : december 8, 2021
+    Last date of update           : december 9, 2021
     Version                       : 1.0.0
 """
 import os
@@ -14,7 +14,8 @@ from dbmanagment import LinkDb, SelectTabDb, DeleteTabDb, InsertTabDb
 from dbmanagment import UpdateTabDb
 from display import DisplayIndiv
 from reference import event_gb, event_fam
-from cities import ListCities
+from cities import ListCitiesEvent
+from warning import WarningMessage
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/event.ui"
 
@@ -35,12 +36,10 @@ class EventManagment(QtWidgets.QDialog, Ui_Dialog):
 
     def SaveEvent(self, fen):
         SaveEvent(self, fen)
-        self.close()
         return
 
     def UpdateEvent(self, fen):
         UpdateEvent(self, fen)
-        self.close()
         return
 
     def ExitEvent(self):
@@ -48,7 +47,7 @@ class EventManagment(QtWidgets.QDialog, Ui_Dialog):
         return
 
     def NewCity(self, fen):
-        ListCities(fen)
+        ListCitiesEvent(self, fen)
         return
 
     def NewSpouse(self, fen):
@@ -322,6 +321,9 @@ def SaveEvent(event, fen):
 
     """ Extract datas of event """
     data = EventData(event, fen)
+    if data[0] is None:
+        WarningMessage(event, fen.mess["all80"], fen.mess["all81"])
+        return
 
     """ Insert data """
     conn = sqlite3.connect(LinkDb(fen))
@@ -339,6 +341,7 @@ def SaveEvent(event, fen):
     data = "%s %s %s" % (fen.CId.text(), fen.CName.text(), fen.CFirstname.text())
     """ Show the new event """
     DisplayIndiv(fen, data)
+    event.close()
     return
 
 
@@ -353,6 +356,9 @@ def UpdateEvent(event, fen):
     """ Extract datas of event """
     data = []
     data = EventData(event, fen)
+    if data[0] is None:
+        WarningMessage(event, fen.mess["all80"], fen.mess["all81"])
+        return
 
     id = fen.IndividualTable.item(fen.IndividualTable.currentRow(), 7).text()
     data.append(id)
@@ -372,6 +378,7 @@ def UpdateEvent(event, fen):
     data = "%s %s %s" % (fen.CId.text(), fen.CName.text(), fen.CFirstname.text())
     """ Show the update """
     DisplayIndiv(fen, data)
+    event.close()
     return
 
 
@@ -385,11 +392,18 @@ def EventData(event, fen):
     """
     data = [None, None, None, None, None, None, None,
             None, None, None, None, None]
-    """ Select id """
-    data[0] = event.EId.text()
-    data[1] = event.EId.text()
     """ Select the type of event """
     data[2] = event_gb[event.EEvent.currentIndex()]
+    if data[2] in event_fam:
+        if event.ESpouse.currentIndex() == 0\
+            or len(event.ESpouse.currentText()) == 0:
+            return data
+    else:
+        data[1] = event.EId.text()
+
+    """ Select id """
+    data[0] = event.EId.text()
+
     if event.EDay.text():
         data[3] = event.EDay.text()
     month = event.EMonth.currentIndex()

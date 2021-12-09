@@ -1,7 +1,7 @@
 """ Definition of messages in French and English
     Author                        : Ph OCONTE
     Date                          : november 24, 2021
-    Date of last update           : december 8, 2021
+    Date of last update           : december 9, 2021
     Version                       : 1.1.0
 """
 
@@ -113,6 +113,8 @@ mess_fr = {
         "all68": "Fichier log",
         "all69": "version",
         "all70": "Nouvel individu",
+        "all80": "ATTENTION !",
+        "all81": "Sélectionner le conjoint !",
         "lis00": "Naissance",
         "lis01": "Baptème",
         "lis02": "Mariage",
@@ -300,6 +302,8 @@ mess_gb = {
         "all68": "Log file",
         "all69": "Version",
         "all70": "New individual",
+        "all80": "WARNING !",
+        "all81": "Select the spouse !",
         "lis00": "Birth",
         "lis01": "Baptism",
         "lis02": "Wedding",

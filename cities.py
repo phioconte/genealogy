@@ -1,7 +1,7 @@
 """ Cities list
     Author                        : Ph OCONTE
     Date                          : november 30, 2021
-    Last date of update           : december 8, 2021
+    Last date of update           : december 9, 2021
     Version                       : 1.0.0
 """
 import sqlite3
@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets, uic, QtGui
 
 from dbmanagment import LinkDb, SelectTabDb, InsertTabDb, UpdateTabDb, DeleteTabDb
+from util import SelList
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/cities.ui"
 
@@ -77,6 +78,52 @@ def ListCities(fen):
 
     """ Init the window cities """
     cities = CitiesManagment(fen)
+    cities = CitiesManagment(fen)
+
+    ShowListCities(cities, fen)
+
+    cities.exec()
+    return
+
+
+def ListCitiesEvent(event, fen):
+    """ Init the window cities """
+    cities = CitiesManagment(fen)
+
+    ShowListCities(cities, fen)
+
+    cities.exec()
+
+    """ ReInit the CityList """
+    event.ECity.clear()
+    data = []
+    conn = sqlite3.connect(LinkDb(fen))
+    cursor = conn.cursor()
+    citiesList = SelectTabDb(fen, cursor, 'city', ('*',), 'null', 0, 1, 'ORDER BY city')
+    cursor.close()
+    conn.close()
+    if citiesList:
+        for city in citiesList:
+            line = "%s %s" % (city[4], city[2])
+            data.append(line)
+    if data:
+        SelList(data, event.ECity, 1)
+
+    line = "%s %s" % (cities.PCode.text(), cities.City.text())
+    # fen.Message(line)
+    event.ECity.setCurrentText(line)
+    return
+
+
+def ShowListCities(cities, fen):
+    """ Show all the cities of the database
+    input:
+        WindowTitle : Window title
+    output:
+        nothing
+    """
+
+    """ Init the window cities """
     cities.setWindowTitle(fen.mess["all67"])
     cities.CityTable.clearContents()
 
@@ -119,7 +166,6 @@ def ListCities(fen):
     """ Mask Update button """
     cities.Update.setEnabled(False)
     cities.Save.setEnabled(True)
-    cities.exec()
 
     cursor.close()
     conn.close()

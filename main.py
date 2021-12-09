@@ -1,7 +1,7 @@
 """ Genealogy management program
  Author                        : Ph OCONTE
  Date                          : november 24, 2021
- Date of last update           : december 6, 2021
+ Date of last update           : december 9, 2021
  Version                       : 1.0.0
 """
 import sys
@@ -19,6 +19,7 @@ from cities import ListCities
 from tools import ToolsDbtoTxt, ToolsPrivatePublic, ToolsAnalysis
 from about import AboutVersion, AboutTutorial, AboutLog
 from individual import NewIndividual, UpdateIndividual
+from util import CopyFile
 
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/genealogy_V1.ui"
 
@@ -125,6 +126,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.switch16.triggered.connect(self.Version)
         self.switch17.triggered.connect(self.Tutorial)
         self.switch18.triggered.connect(self.Log)
+
+        """ Exit function: """
+        self.switch07.triggered.connect(self.exit)
 
     def MConfig(self):          # Configuration command
         ConfigMenu(fen)
@@ -338,6 +342,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         AboutLog(self)
         return
 
+    """================================
+    Exit software
+    """
+
+    def exit(self):
+        """ Exit function """
+        """ back up the database name_yyyymmddhhmmss.db """
+        CopyFile(fen)
+        self.close()
+        return
+
     def Message(self, mes):     # Show message to statusbar
         """
         Show message
@@ -347,8 +362,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         output:
             nothing
         """
-        # self.WriteTexte.insertPlainText("%s\n" % (mes))
-        # self.log.insertPlainText("%s\n" % (mes))
         self.statusbar.showMessage("%s\n" % (mes), 0)
         LogFile = "%s/log.txt" % (fen.SaveDirectory)
         """ Write to the log file """

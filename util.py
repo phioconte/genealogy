@@ -5,9 +5,12 @@
  Version                       : 1.0.0
 """
 import os
+import datetime
 from PyQt5.QtWidgets import (QFileDialog, QMessageBox, QDialogButtonBox)
 
-from dbmanagment import SelectTabDb, CountTabDb
+from shutil import copyfile
+
+from dbmanagment import SelectTabDb, CountTabDb, LinkDb
 from reference import dateap_gb
 
 
@@ -63,6 +66,26 @@ def WriteFile(fen, mes1, mes2, type, mes3, dir):
     fen.Message("%s : %s" % (mes1, file_name))
 
     return (file[0])
+
+
+def CopyFile(fen):
+    """ Copy file
+    input:
+        fen     : pointer to window
+    output:
+        nothing
+    """
+    date = datetime.datetime.now()
+    date_s = "%04d%02d%02d%02d%02d%02d" % (date.year, date.month, date.day,
+                                           date.hour, date.minute, date.second)
+    source = LinkDb(fen)
+    if source:
+        if os.path.exists(source):
+            destination = ('.').join(source.split('.')[:-1])
+            destination = "%s_%s.%s" % (destination, date_s, source.split('.')[-1])
+            copyfile(source, destination)
+
+    return
 
 
 def InitList(fen, cursor):
