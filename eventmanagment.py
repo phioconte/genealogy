@@ -1,7 +1,7 @@
 """ Managment of events
     Author                        : Ph OCONTE
     Date                          : november 29, 2021
-    Last date of update           : december 9, 2021
+    Last date of update           : december 10, 2021
     Version                       : 1.0.0
 """
 import os
@@ -269,7 +269,11 @@ def EventInitList(fen, event, cursor):
     cities = SelectTabDb(fen, cursor, 'city', ('*',), 'null', 0, 1, 'ORDER BY city')
     if cities:
         for city in cities:
-            line = "%s %s" % (city[4], city[2])
+            line = ""
+            if city[4] is not None:
+                line = "%s" % (city[4])
+            line = "%s %s" % (line, city[2])
+            line = line.strip()
             data.append(line)
     if data:
         SelList(data, event.ECity, 1)
@@ -324,7 +328,6 @@ def SaveEvent(event, fen):
     if data[0] is None:
         WarningMessage(event, fen.mess["all80"], fen.mess["all81"])
         return
-
     """ Insert data """
     conn = sqlite3.connect(LinkDb(fen))
     cursor = conn.cursor()
@@ -359,7 +362,6 @@ def UpdateEvent(event, fen):
     if data[0] is None:
         WarningMessage(event, fen.mess["all80"], fen.mess["all81"])
         return
-
     id = fen.IndividualTable.item(fen.IndividualTable.currentRow(), 7).text()
     data.append(id)
     """ Update data """
@@ -411,7 +413,7 @@ def EventData(event, fen):
         data[4] = month
     if event.EYear.text():
         data[5] = event.EYear.text()
-    city = event.ECity.currentIndex
+    city = event.ECity.currentIndex()
     if city != 0:
         data[6] = EventExtractCity(fen, event.ECity.currentText())
     if event.ENote.text():
@@ -439,7 +441,7 @@ def EventExtractCity(fen, incity):
     """ Extract the complete city
     input:
         fen       : pointer to window
-        incity    : city to define
+        incity    : city to define (postal code + city)
     output
         outcity   : city
     """
@@ -450,16 +452,20 @@ def EventExtractCity(fen, incity):
     else:
         return outcity
 
-    loccity.append(city[0])
-    loccity.append(' '.join(city[1:]))
-
     conn = sqlite3.connect(LinkDb(fen))
     cursor = conn.cursor()
-
     params = ('locality', 'city', 'Insee', 'Postal', 'dep',
               'district', 'country')
-    row = SelectTabDb(fen, cursor, 'city', params, 'Postal=? AND city=?',
-                      (loccity), 0, 'null')
+    if city[0].isnumeric():
+        loccity.append(city[0])
+        loccity.append(' '.join(city[1:]))
+        row = SelectTabDb(fen, cursor, 'city', params, 'Postal=? AND city=?',
+                          (loccity), 0, 'null')
+    else:
+        loccity.append(' '.join(city[0:]))
+        row = SelectTabDb(fen, cursor, 'city', params, 'city=?',
+                          (loccity[0],), 0, 'null')
+
     if row:
         outcity = "%s,%s,%s,%s,%s,%s,%s" % (row[0], row[1], row[2], row[3],
                                             row[4], row[5], row[6])
@@ -467,8 +473,6 @@ def EventExtractCity(fen, incity):
     cursor.close()
     conn.close()
     return outcity
-
-    return
 
 
 def EventNewFamily(fen, cursor, data):
@@ -493,7 +497,6 @@ def EventNewFamily(fen, cursor, data):
     else:
         """ first family """
         i = 1
-    fen.Message("Première famille : %s" % (i))
     InsertTabDb(fen, cursor, 'fam', ('id', 'idh', 'idw'),
                 (i, data[0], data[1]))
     return

@@ -1,7 +1,7 @@
 """ Cities list
     Author                        : Ph OCONTE
     Date                          : november 30, 2021
-    Last date of update           : december 9, 2021
+    Last date of update           : december 10, 2021
     Version                       : 1.0.0
 """
 import sqlite3
@@ -104,12 +104,18 @@ def ListCitiesEvent(event, fen):
     conn.close()
     if citiesList:
         for city in citiesList:
-            line = "%s %s" % (city[4], city[2])
+            line = ""
+            if city[4] is not None:
+                line = "%s" % (city[4])
+            line = "%s %s" % (line, city[2])
+            line = line.strip()
             data.append(line)
     if data:
         SelList(data, event.ECity, 1)
-
-    line = "%s %s" % (cities.PCode.text(), cities.City.text())
+    if len(cities.PCode.text()) > 0 :
+        line = "%s" % (cities.PCode.text())
+    line = "%s %s" % (line, cities.City.text())
+    line = line.strip()
     # fen.Message(line)
     event.ECity.setCurrentText(line)
     return
@@ -189,10 +195,8 @@ def SaveNewCity(cities, fen):
         if cities.City.text():
             data[1] = cities.City.text()
         if cities.PCode.text():
-            fen.Message("Postal Code : %s" % (cities.PCode.text()))
             data[2] = cities.PCode.text()
         if cities.ICode.text():
-            fen.Message("INSEE Code : %s" % (cities.ICode.text()))
             data[3] = cities.ICode.text()
         if cities.Department.text():
             data[4] = cities.Department.text()
@@ -206,10 +210,8 @@ def SaveNewCity(cities, fen):
         cursor = conn.cursor()
         if cities.Id.text():        # update city
             data.append(cities.Id.text())
-            fen.Message(data)
             UpdateTabDb(fen, cursor, 'city', params, 'id=?', data)
         else:
-            fen.Message(data)
             InsertTabDb(fen, cursor, 'city', params, data)
         conn.commit()
         cursor.close()

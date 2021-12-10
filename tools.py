@@ -1,7 +1,7 @@
 """ Definition of tools
  Author                        : Ph OCONTE
  Date                          : november 30, 2021
- Date of last update           : december 8, 2021
+ Date of last update           : december 10, 2021
  Version                       : 1.1.0
 """
 import sqlite3
@@ -144,7 +144,7 @@ def ToolsDbtoTxtObjectList(fen, cursor, wri):
                        'ORDER BY id')
     if rows:
         for row in rows:
-            wri.write("Id object : %4s\n" % (row[1]))
+            wri.write("Id object : %4s\n" % (row[0]))
             wri.write("\tId individual : %s\n" % (row[2]))
             wri.write("\tfile          : %s\n" % (row[3]))
     return
@@ -168,10 +168,12 @@ def ToolsDbtoTxtCityList(fen, cursor, wri):
             wri.write("Id city : %4s\n" % (row[0]))
             wri.write("\tLocality    : %s\n" % (row[1]))
             wri.write("\tCity        : %s\n" % (row[2]))
-            if row[3]:
-                wri.write("\tPOSTAL code : %05d\n" % (int(row[3])))
-            if row[4]:
-                wri.write("\tINSEE code  : %05d\n" % (int(row[4])))
+            if row[3] is not None:
+                if row[3].isnumeric():
+                    wri.write("\tPOSTAL code : %05d\n" % (int(row[3])))
+            if row[4] is not None:
+                if row[4].isnumeric():
+                    wri.write("\tINSEE code  : %05d\n" % (int(row[4])))
             wri.write("\tDepartment  : %s\n" % (row[5]))
             wri.write("\tDistrict    : %s\n" % (row[6]))
             wri.write("\tCountry     : %s\n" % (row[7]))

@@ -1,7 +1,7 @@
 """ Display the data from database
  Author                        : Ph OCONTE
  Date                          : november 27, 2021
- Date of last update           : november 28, 2021
+ Date of last update           : december 10, 2021
  Version                       : 1.0.0
 """
 import sqlite3
@@ -430,8 +430,12 @@ def DisplayCasef(fen, indiv, cursor, sexe):
                         fen.IndividualTable.setItem(i, 2, QTableWidgetItem("%05d %s"
                                                     % (int(city[3]), city[1])))
                     else:
-                        fen.IndividualTable.setItem(i, 2, QTableWidgetItem("%s %s"
-                                                    % (city[3], city[1])))
+                        if city[3] != 'None':
+                            fen.IndividualTable.setItem(i, 2, QTableWidgetItem("%s %s"
+                                                        % (city[3], city[1])))
+                        else:
+                            fen.IndividualTable.setItem(i, 2, QTableWidgetItem("%s"
+                                                        % (city[1])))
                 """ Note """
                 if event[4]:
                     fen.IndividualTable.setItem(i, 3, QTableWidgetItem(event[4]))
