@@ -2,7 +2,7 @@
 Read and write GEDCOM file
 Author                        : Ph OCONTE
 Date                          : november 28, 2021
-Date of last update           : november 28, 2021
+Date of last update           : december 10, 2021
 Version                       : 1.1.0
 """
 import os
@@ -625,7 +625,8 @@ def GedcomWriteEvent(fen, eve, event, wri, nb):
         if event[7]:
             wri.write("    2 TIME %s\n" % (event[7]))
     if event[3]:
-        wri.write("    2 PLAC %s\n" % (event[3]))
+        # wri.write("    2 PLAC %s\n" % (event[3]))
+        GedcomWritePlac(fen, wri, event[3])
     if event[4]:
         wri.write("    2 NOTE %s\n" % (event[4]))
     if event[6]:
@@ -634,6 +635,21 @@ def GedcomWriteEvent(fen, eve, event, wri, nb):
         data = [nb, event[6]]
 
     return data
+
+
+def GedcomWritePlac(fen, wri, data):
+    city = data.split(',')
+    wri.write("    2 PLAC %s\n" % (data))
+    wri.write("    2 ADDR\n")
+    if city[1] != 'None':
+        wri.write("      3 CITY %s\n" % (city[1]))
+    if city[3] != 'None':
+        wri.write("      3 POST %s\n" % (city[3]))
+    if city[5] != 'None':
+        wri.write("      3 STAE %s\n" % (city[5]))
+    if city[6] != 'None':
+        wri.write("      3 CTRY %s\n" % (city[6]))
+    return
 
 
 def GedcomWriteObjectIndiv(fen, id, wri, cursor):

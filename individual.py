@@ -1,7 +1,7 @@
 """ Individual managment
     Author                        : Ph OCONTE
     Date                          : december 6, 2021
-    Last date of update           : december 8, 2021
+    Last date of update           : december 10, 2021
     Version                       : 1.0.0
 """
 import sqlite3
@@ -81,8 +81,8 @@ class ShowIndividual(QtWidgets.QDialog, Ui_Dialog):
 
         params = ('id', 'name', 'firstname')
         rows = SelectTabDb(fen, cursor, 'indiv', params,
-                           "name LIKE ? AND sexe='M'",
-                           (name,),
+                           "name LIKE ? AND sexe='M' AND NOT id=?",
+                           (name, self.Id.text()),
                            1, 'ORDER BY name, firstname')
         if rows:
             dataFather = []
@@ -97,6 +97,26 @@ class ShowIndividual(QtWidgets.QDialog, Ui_Dialog):
             SelList(dataFather, self.Father, 1)
             dataMother.sort()
             SelList(dataMother, self.Mother, 1)
+        else:
+            dataFather = []
+            dataMother = []
+            rows = SelectTabDb(fen, cursor, 'indiv', params,
+                               "sexe=?", ('M',),
+                               1, 'ORDER BY name, firstname')
+            if rows:
+                for row in rows:
+                    line = ("%s %s %s" % (row[0], row[1], row[2]))
+                    dataFather.append(line)
+                SelList(dataFather, self.Father, 1)
+            rows = SelectTabDb(fen, cursor, 'indiv', params,
+                               "sexe=?", ('F',),
+                               1, 'ORDER BY name, firstname')
+            if rows:
+                for row in rows:
+                    line = ("%s %s %s" % (row[0], row[1], row[2]))
+                    dataMother.append(line)
+                SelList(dataMother, self.Mother, 1)
+
         cursor.close()
         conn.close()
         return
