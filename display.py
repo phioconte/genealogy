@@ -1,7 +1,7 @@
 """ Display the data from database
  Author                        : Ph OCONTE
  Date                          : november 27, 2021
- Date of last update           : december 10, 2021
+ Date of last update           : december 15, 2021
  Version                       : 1.0.0
 """
 import sqlite3
@@ -13,6 +13,10 @@ from PyQt5.QtGui import QPixmap
 from dbmanagment import LinkDb, DefDb, SelectTabDb, CountTabDb
 from util import InitList, ReadEventSexe
 from reference import dateap_gb, event_gb
+
+""" Update of december 15, 2021
+    Show the number of cities
+"""
 
 
 def DisplayIn(fen):
@@ -45,9 +49,6 @@ def DbRead(fen):
     """ Read all of the individual data """
     InitList(fen, cursor)
 
-    """ Read all of the city data """
-    # InitCity(fen, cursor)
-
     """ Count the number of families """
     nb = CountTabDb(fen, cursor, 'fam')
     fen.Message("%s %05d" % (fen.mess["all02"], nb[0]))
@@ -57,12 +58,15 @@ def DbRead(fen):
     """ Count the number of objects """
     nb = CountTabDb(fen, cursor, 'object')
     fen.Message("%s %05d" % (fen.mess["all04"], nb[0]))
-
+    """ Count the number of cities """
+    nb = CountTabDb(fen, cursor, 'city')
+    fen.Message("%s %05d" % (fen.mess["all03"], nb[0]))
     conn.commit()
     cursor.close()
     conn.close()
 
     return
+
 
 
 def DisplayIndiv(fen, data):

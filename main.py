@@ -1,7 +1,7 @@
 """ Genealogy management program
  Author                        : Ph OCONTE
  Date                          : november 24, 2021
- Date of last update           : december 9, 2021
+ Date of last update           : december 12, 2021
  Version                       : 1.0.0
 """
 import sys
@@ -15,7 +15,7 @@ from pdfwrite import PdfWrite
 from htmlwrite import HtmlWrite
 from eventmanagment import InputNewEvent, InputModifyEvent, InputDeleteEvent
 from eventmanagment import EventSelectPhoto
-from cities import ListCities
+from cities import ListCities, CitiesImportList
 from tools import ToolsDbtoTxt, ToolsPrivatePublic, ToolsAnalysis
 from about import AboutVersion, AboutTutorial, AboutLog
 from individual import NewIndividual, UpdateIndividual
@@ -111,14 +111,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         switch12   : Analyse database
         switch13   : Private to public
         switch15   : List of cities
+        switch19   : Import cities list
         """
         self.switch11.triggered.connect(self.DbtoTxt)
         self.switch12.triggered.connect(self.Analyse)
         self.switch13.triggered.connect(self.Private)
         self.switch15.triggered.connect(self.Cities)
+        self.switch19.triggered.connect(self.ImportCitiesList)
 
         """
-        Tools
+        About
         switch16   : Version
         switch17   : Tutorial
         switch18   : Log
@@ -302,10 +304,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     """
     Tools
-    DbtoTxt    : Database to *.txt file
-    Analyse    : Analyse database
-    Private   : Private to public
-    ListCities : List of cities
+    DbtoTxt          : Database to *.txt file
+    Analyse          : Analyse database
+    Private          : Private to public
+    ListCities       : List of cities
+    ImportCitiesList : Import cities list
     """
 
     def DbtoTxt(self):
@@ -322,6 +325,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def Cities(self):
         ListCities(fen)
+        return
+
+    def ImportCitiesList(self):
+        CitiesImportList(fen)
         return
 
     """

@@ -1,7 +1,7 @@
 """ Definition of tools
  Author                        : Ph OCONTE
  Date                          : november 30, 2021
- Date of last update           : december 10, 2021
+ Date of last update           : december 14, 2021
  Version                       : 1.1.0
 """
 import sqlite3

@@ -92,6 +92,7 @@
     <addaction name="switch12"/>
     <addaction name="switch13"/>
     <addaction name="switch15"/>
+    <addaction name="switch19"/>
    </widget>
    <widget class="QMenu" name="menu03">
     <property name="title">
@@ -780,7 +781,7 @@
       </font>
      </property>
      <property name="autoFillBackground">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="styleSheet">
       <string notr="true">QPushButton {background-color:yellow; color:blue}</string>
@@ -899,6 +900,11 @@
   <action name="switch18">
    <property name="text">
     <string>Log</string>
+   </property>
+  </action>
+  <action name="switch19">
+   <property name="text">
+    <string>Import cities list</string>
    </property>
   </action>
  </widget>

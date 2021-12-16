@@ -1,10 +1,11 @@
 """ Generating a pdf file
     Author                        : Ph OCONTE
     Date                          : november 29, 2021
-    Date of last update           : december 5, 2021
+    Date of last update           : december 11, 2021
     Version                       : 1.0.0
 """
 import sqlite3
+import copy
 from fpdf import FPDF
 
 from dbmanagment import LinkDb, SelectTabDb
@@ -54,15 +55,20 @@ def PdfWrite(fen):
     link = []
     if rows:
         for row in rows:
-            line = ("%s" % (row[0]), row[1], row[2], row[3])
+            """ Update of december 11, 2021 """
+            line = []
+            for i in range(0, 3):
+                if row[i] is not None:
+                    line.append("%s" % (row[i]))
+                else:
+                    line.append(" ")
             datas.append(line)
-            # document.cell(txt=line, ln=ln)
+            """ end of update """
         headings = (fen.mess["lab29"], fen.mess["lab30"], fen.mess["lab31"])
         col_widths = (10, 30, 50)
         aligns = ('R', 'RF', 'RF')
         link = PdfTableList(fen, document, headings, datas, col_widths,
                             aligns, 10, 10)
-
     """ Print the datas of each individual """
     fen.Message(fen.mess["pdf09"])
     PdfWriteEachIndiv(fen, cursor, document, link)
@@ -127,7 +133,14 @@ def PdfWriteEachIndiv(fen, cursor, doc, links):
             col_widths = (15, 45, 80, 18)
             aligns = ('RF', 'RF', 'RF', 'C')
             datas = []
-            line = ("%s" % (row[0]), row[1], row[2], row[3])
+            """ Update of december 11, 2021 """
+            line = []
+            for j in range(0, 4):
+                if row[j] is not None:
+                    line.append("%s" % (row[j]))
+                else:
+                    line.append(" ")
+            """ End of update """
             datas.append(line)
             PdfTable(fen, doc, headings, datas, col_widths, aligns, 12, 12)
             doc.ln()
@@ -351,13 +364,11 @@ def PdfTableList(fen, doc, headings, rows, col_widths, aligns,
     line_height = doc.font_size * 1.2
     fill = False
     links = []
-    nb_lib = 33
     for row in rows:
         if doc.will_page_break(line_height):
             PdfHeader(fen, doc)
             PdfWriteHeaderTable(fen, doc, col_widths, headings, headersize,
                                 linesize)
-            nb_lig = 40
         doc.cell(col_widths[0], 6, row[0], 1, 0, aligns[0], fill)
         doc.set_font(style="U")
         link = doc.add_link()
