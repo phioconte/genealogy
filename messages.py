@@ -1,8 +1,8 @@
 """ Definition of messages in French and English
     Author                        : Ph OCONTE
     Date                          : november 24, 2021
-    Date of last update           : december 14, 2021
-    Version                       : 1.1.0
+    Date of last update           : december 17, 2021
+    Version                       : 1.0.0
 """
 
 
@@ -195,6 +195,18 @@ mess_fr = {
         "ana01": "individu de plus de 99 ans et toujours en vie :",
         "ana02": "Naissance : ",
         "but01": "Nouvel évènement",
+        "csv00": "==== OUVERTURE EN LECTURE DES FICHIERS CSV ====",
+        "csv01": "1 - Sélection en lecture du fichier CSV des familles",
+        "csv02": "2 - Sélection en lecture du fichier CSV des communes",
+        "csv03": "3 - Extraction des individus",
+        "csv04": "4 - Extraction des communes",
+        "csv05": "OUVERTURE EN LECTURE DU FICHIER CSV DES FAMILLES",
+        "csv06": "OUVERTURE EN LECTURE DU FICHIER CSV DES COMMUNES",
+        "csv07": "==== GENERATION DES FICHIERS CSV DES FAMILLES",
+        "csv08": "OUVERTURE EN ECRITURE DU FICHIER CSV DES FAMILLES",
+        "csv09": "OUVERTURE EN ECRITURE DU FICHIER CSV DES COMMUNES",
+        "csv10": "1 - Sélection en écriture du fichier CSV des familles",
+        "csv11": "2 - Sélection en écriture du fichier CSV des communes",
        }
 
 mess_gb = {
@@ -385,6 +397,18 @@ mess_gb = {
         "ana01": "individuals over 99 years old and still alive :",
         "ana02": "Birth : ",
         "but01": "New event",
+        "csv00": "==== OPENING BY READING CSV FILES ====",
+        "csv01": "1 - Read selection of the families CSV file",
+        "csv02": "2 - Read selection of the cities CSV file",
+        "csv03": "3 - Extraction of individuals",
+        "csv04": "4 - Extraction of cities",
+        "csv05": "OPENING BY READING CSV FILES OF FAMILIES",
+        "csv06": "OPENING BY READING CSV FILES OF CITIES",
+        "csv07": "==== GENERATION OF CSV FILES FOR FAMILIES",
+        "csv08": "OPENING BY WRITING CSV FILES OF FAMILIES",
+        "csv09": "OPENING BY WRITING CSV FILES OF CITIES",
+        "csv10": "1 - Write selection of the families CSV file",
+        "csv11": "2 - Write selection of the cities CSV file",
         }
 
 language = ['english', 'français']

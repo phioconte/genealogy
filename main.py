@@ -1,7 +1,7 @@
 """ Genealogy management program
  Author                        : Ph OCONTE
  Date                          : november 24, 2021
- Date of last update           : december 12, 2021
+ Date of last update           : december 17, 2021
  Version                       : 1.0.0
 """
 import sys
@@ -10,6 +10,7 @@ from PyQt5 import QtWidgets, uic, QtGui
 from config import Config, ConfigMenu
 from opendatabase import OpenDatabase, RenameDb
 from display import DisplayIn, DisplayIndiv
+from csvreadwrite import CsvRead, CsvWrite
 from gedcomreadwrite import GedcomRead, GedcomWrite
 from pdfwrite import PdfWrite
 from htmlwrite import HtmlWrite
@@ -21,6 +22,9 @@ from about import AboutVersion, AboutTutorial, AboutLog
 from individual import NewIndividual, UpdateIndividual
 from util import CopyFile
 
+""" Update december 17, 2021
+    add csv read and write commands
+"""
 qtCreatorFile = "/home/philippe/Documents/QT_CREATION/genealogy_V1/genealogy_V1.ui"
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -240,9 +244,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return
 
     def CsvR(self):
+        CsvRead(fen)
         return
 
     def CsvW(self):
+        CsvWrite(fen)
         return
 
     def GedR(self):
